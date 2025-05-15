@@ -1,0 +1,61 @@
+def astar(s, e):
+    o = [s]
+    c = []
+    g = {s: 0}
+    p = {s: None}
+
+    while o:
+        n = None
+        for x in o:
+            if n is None or g[x] + h(x) < g[n] + h(n):
+                n = x
+
+        if n == e:
+            path = []
+            while n:
+                path.append(n)
+                n = p[n]
+            print("Path Found:", path[::-1])
+            return path[::-1]
+
+        for m, w in nbr(n):
+            if m not in o and m not in c:
+                o.append(m)
+                g[m] = g[n] + w
+                p[m] = n
+            elif g[m] > g[n] + w:
+                g[m] = g[n] + w
+                p[m] = n
+                if m in c:
+                    c.remove(m)
+                    o.append(m)
+
+        o.remove(n)
+        c.append(n)
+
+    print("Path doesn't exist!")
+    return None
+
+def nbr(x):
+    return G.get(x, [])
+
+def h(n):
+    return H.get(n, 0)
+
+G = {
+    'S': [('A', 1), ('B', 4)],
+    'A': [('C', 2), ('D', 5)],
+    'B': [('D', 1)],
+    'C': [('E', 3)],
+    'D': [('E', 1), ('F', 2)],
+    'E': [('G', 2)],
+    'F': [('G', 1)]
+}
+
+H = {
+    'S': 7, 'A': 6, 'B': 5,
+    'C': 4, 'D': 3, 'E': 2,
+    'F': 1, 'G': 0
+}
+
+astar('S', 'G')
